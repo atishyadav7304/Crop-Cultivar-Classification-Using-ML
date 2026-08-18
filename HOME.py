@@ -5,7 +5,7 @@ import io
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Crop Cultivar Identification",
+    page_title="Crop Cultivar Classification Using Machine Learning",
     page_icon="🌱",
     layout="wide",
     initial_sidebar_state="expanded"
