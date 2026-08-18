@@ -104,30 +104,23 @@ st.markdown("---")
 st.write("### 📂 Don't have data? Try a sample!")
 st.write("Download a synthetic hyperspectral dataset formatted specifically for this dashboard. You can use this file in **Step 1: Pre-Processing**.")
 
-@st.cache_data
-def generate_sample_data():
-    cultivars = ['Yuva', 'Shakti', 'Akrira', 'RCH'] * 8
-    wavelengths = np.arange(350, 2501, 1)
-    np.random.seed(42)
-    data = np.random.uniform(0.05, 0.7, size=(len(cultivars), len(wavelengths)))
-    
-    df_sample = pd.DataFrame(data, columns=[str(w) for w in wavelengths])
-    df_sample.insert(0, 'Cultivar', cultivars)
-    
-    buffer = io.BytesIO()
-    with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
-        df_sample.to_excel(writer, index=False, sheet_name='Raw_Spectra')
-    return buffer.getvalue()
+# --- Sample Data Download Section ---
+st.write("### 📂 Don't have data? Try a sample!")
+st.write("Download a sample hyperspectral dataset formatted specifically for this dashboard. You can use this file in **Step 1: Pre-Processing**.")
 
-sample_excel = generate_sample_data()
+# Replace 'YOUR_FILE_NAME_HERE.xlsx' with the exact name of the file you uploaded to GitHub!
+file_path = "Ujjain_All_Crops_Cultivar_Demo_Dashboard.xlsx" 
 
-st.download_button(
-    label="📥 Download Sample Hyperspectral Data (.xlsx)",
-    data=sample_excel,
-    file_name="Sample_Raw_Hyperspectral_Data.xlsx",
-    mime="application/vnd.ms-excel"
-)
-
+try:
+    with open(file_path, "rb") as file:
+        st.download_button(
+            label="📥 Download Sample Hyperspectral Data (.xlsx)",
+            data=file,
+            file_name="Sample_Hyperspectral_Data.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+except FileNotFoundError:
+    st.error(f"Sample file not found. Please ensure '{file_path}' is uploaded to the main GitHub repository.")
 # --- References Section ---
 with st.expander("📚 View Project References"):
     st.markdown("""
