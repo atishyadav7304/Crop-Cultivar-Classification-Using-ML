@@ -100,10 +100,6 @@ with col3:
 
 st.markdown("---")
 
-# --- Sample Data Generator Section ---
-st.write("### 📂 Don't have data? Try a sample!")
-st.write("Download a synthetic hyperspectral dataset formatted specifically for this dashboard. You can use this file in **Step 1: Pre-Processing**.")
-
 # --- Sample Data Download Section ---
 st.write("### 📂 Don't have data? Try a sample!")
 st.write("Download a sample hyperspectral dataset formatted specifically for this dashboard. You can use this file in **Step 1: Pre-Processing**.")
