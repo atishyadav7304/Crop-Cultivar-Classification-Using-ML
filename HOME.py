@@ -11,22 +11,93 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Custom CSS for Styling ---
+# --- Custom CSS for Styling & Animations ---
 st.markdown("""
     <style>
-    .main-title {
-        font-size: 3rem;
-        color: #2E7D32;
-        text-align: center;
-        font-weight: bold;
-        margin-bottom: 0px;
+    /* --- Carousel Background for Hero Section --- */
+    .hero-container {
+        position: relative;
+        width: 100%;
+        height: 350px; 
+        border-radius: 15px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
+    
+    .hero-bg {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -2;
+    }
+    
+    .slide {
+        width: 100%; height: 100%;
+        position: absolute;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        animation: fade 12s infinite; /* 3 images * 4 seconds = 12s total */
+    }
+    
+    /* Image 1 */
+    .slide:nth-child(1) { 
+        background-image: url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=2070&auto=format&fit=crop'); 
+        animation-delay: 0s; 
+    }
+    /* Image 2 */
+    .slide:nth-child(2) { 
+        background-image: url('https://images.unsplash.com/photo-1574943320219-553eb213f72d?q=80&w=2012&auto=format&fit=crop'); 
+        animation-delay: 4s; 
+    }
+    /* Image 3 */
+    .slide:nth-child(3) { 
+        background-image: url('https://images.unsplash.com/photo-1586771107445-d3af2e8c8b66?q=80&w=2074&auto=format&fit=crop'); 
+        animation-delay: 8s; 
+    }
+    
+    @keyframes fade {
+        0% { opacity: 0; }
+        10% { opacity: 1; }
+        33% { opacity: 1; }
+        43% { opacity: 0; }
+        100% { opacity: 0; }
+    }
+
+    /* Dark overlay so text is readable */
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6); 
+        z-index: -1;
+    }
+
+    /* Text inside Hero */
+    .hero-content {
+        z-index: 1;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .main-title {
+        font-size: 3.5rem;
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+    }
+    
     .sub-title {
         font-size: 1.5rem;
-        color: #555555;
-        text-align: center;
-        margin-bottom: 30px;
+        color: #dcedc8;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
     }
+
+    /* --- Other Styles --- */
     .section-header {
         color: #2E7D32;
         border-bottom: 2px solid #2E7D32;
@@ -44,12 +115,41 @@ st.markdown("""
         padding-bottom: 20px;
         border-radius: 10px;
     }
+    
+    .developer-profile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        gap: 20px;
+    }
+    
+    .developer-img {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #2E7D32;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# --- Hero Section ---
-st.markdown('<div class="main-title">Machine Learning-Based Identification of Crop Cultivars</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Using Hyperspectral Remote Sensing</div>', unsafe_allow_html=True)
+# --- Hero Section with Background Image Carousel ---
+st.markdown("""
+    <div class="hero-container">
+        <div class="hero-bg">
+            <div class="slide"></div>
+            <div class="slide"></div>
+            <div class="slide"></div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="main-title">Machine Learning-Based Identification of Crop Cultivars</div>
+            <div class="sub-title">Using Hyperspectral Remote Sensing</div>
+        </div>
+    </div>
+""", unsafe_allow_html=True)
 
 # --- About & Methodology Section ---
 col_about, col_method = st.columns(2)
@@ -83,19 +183,16 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.info("**Step 1: Pre-Processing**")
     st.write("Upload raw ASD FieldSpec data, remove noise, and resample to 10nm intervals.")
-    # Emojis removed from the file path here
     st.page_link("pages/1_PRE-PROCESSING.py", label="Go to Pre-Processing", icon="⚙️")
 
 with col2:
     st.success("**Step 2: Model Training**")
     st.write("Train traditional ML and Deep Learning algorithms on your split datasets.")
-    # Emojis removed from the file path here
     st.page_link("pages/2_MODEL.py", label="Go to Models", icon="🧠")
 
 with col3:
     st.warning("**Step 3: Comparison**")
     st.write("Analyze and compare evaluation metrics across all trained models.")
-    # Emojis removed from the file path here
     st.page_link("pages/3_COMPARISON.py", label="Go to Comparison", icon="📊")
 
 st.markdown("---")
@@ -104,7 +201,6 @@ st.markdown("---")
 st.write("### 📂 Don't have data? Try a sample!")
 st.write("Download a sample hyperspectral dataset formatted specifically for this dashboard. You can use this file in **Step 1: Pre-Processing**.")
 
-# Replace 'YOUR_FILE_NAME_HERE.xlsx' with the exact name of the file you uploaded to GitHub!
 file_path = "Ujjain_All_Crops_Cultivar_Demo_Dashboard.xlsx" 
 
 try:
@@ -117,6 +213,7 @@ try:
         )
 except FileNotFoundError:
     st.error(f"Sample file not found. Please ensure '{file_path}' is uploaded to the main GitHub repository.")
+
 # --- References Section ---
 with st.expander("📚 View Project References"):
     st.markdown("""
@@ -129,21 +226,31 @@ with st.expander("📚 View Project References"):
 
 # --- Developer & Contact Details (Footer) ---
 st.markdown('<div class="footer">', unsafe_allow_html=True)
+
+# REPLACE THE 'src' URL BELOW WITH THE LINK TO YOUR ACTUAL PHOTOGRAPH
 st.markdown("""
-    **Developed by:** Atish (Enrollment No.: 25AG62R01) <br>
-    M.Tech Scholar, Land and Water Resource Engineering <br>
-    <br>
-    **M.Tech. Supervisor:** Prof. Rajendra Singh <br>
-    Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
-    <br>
-    **Project Guidance:** Mr. Laxman Boggarapu <br>
-    Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-    <br>
-    **Institutions:** <br>
-    Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
-    National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-    <br>
-    📧 **Contact:** atishyadav7304@gmail.com <br>
-    💬 **Feedback:** We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
+    <div class="developer-profile">
+        <img src="https://via.placeholder.com/150" alt="Developer Photo" class="developer-img">
+        <div style="text-align: left;">
+            <strong>Developed by:</strong> Atish (Enrollment No.: 25AG62R01) <br>
+            M.Tech Scholar, Land and Water Resource Engineering
+        </div>
+    </div>
+    
+    <div style="line-height: 1.6;">
+        <strong>M.Tech. Supervisor:</strong> Prof. Rajendra Singh <br>
+        Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
+        <br>
+        <strong>Project Guidance:</strong> Mr. Laxman Boggarapu <br>
+        Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+        <br>
+        <strong>Institutions:</strong> <br>
+        Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
+        National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+        <br>
+        📧 <strong>Contact:</strong> atishyadav7304@gmail.com <br>
+        💬 <strong>Feedback:</strong> We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
+    </div>
 """, unsafe_allow_html=True)
+
 st.markdown('</div>', unsafe_allow_html=True)
