@@ -137,6 +137,9 @@ st.markdown("""
     **Developed by:** Atish (Enrollment No.: 25AG62R01) <br>
     M.Tech Scholar, Land and Water Resource Engineering <br>
     <br>
+    **M.Tech. Supervisor:** Prof. Rajendra Singh <br>
+    Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
+    <br>
     **Project Guidance:** Mr. Laxman Boggarapu <br>
     Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
     <br>
