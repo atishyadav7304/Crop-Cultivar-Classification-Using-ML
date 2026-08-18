@@ -5,7 +5,7 @@ import io
 
 # --- Page Configuration ---
 st.set_page_config(
-    page_title="Crop Cultivar Classification Using Machine Learning",
+    page_title="Crop Cultivar Identification",
     page_icon="🌱",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -146,4 +146,4 @@ st.markdown("""
     📧 **Contact:** atishyadav7304@gmail.com <br>
     💬 **Feedback:** We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
 """, unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True) 
