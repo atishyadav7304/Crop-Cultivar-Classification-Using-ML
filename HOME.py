@@ -224,33 +224,52 @@ with st.expander("📚 View Project References"):
     5. Datt, B., et al. (2003). Preprocessing EO-1 Hyperion Hyperspectral Data to Support the Application of Agricultural Indexes.
     """)
 
-# --- Developer & Contact Details (Footer) ---
-st.markdown('<div class="footer">', unsafe_allow_html=True)
+# --- Developer & Contact Details (Footer Section - Replacement) ---
+st.markdown("---")
+st.write("### 🖼️ Personalize Your Profile")
+st.write("Upload a profile photo to personalize your developer details on the dashboard.")
 
-# REPLACE THE 'src' URL BELOW WITH THE LINK TO YOUR ACTUAL PHOTOGRAPH
-st.markdown("""
-    <div class="developer-profile">
-        <img src="https://via.placeholder.com/150" alt="Developer Photo" class="developer-img">
-        <div style="text-align: left;">
-            <strong>Developed by:</strong> Atish (Enrollment No.: 25AG62R01) <br>
-            M.Tech Scholar, Land and Water Resource Engineering
+# REPLACE THIS CODE IN YOUR FOOTER
+with st.expander("🛠️ Update Your Profile Photo", expanded=False):
+    developer_photo = st.file_uploader("Upload Profile Photo", type=["jpg", "jpeg", "png"], key="developer_photo")
+
+# Encode the uploaded image to base64 for embedding in HTML
+def get_base64_encoded_image(uploaded_file):
+    if uploaded_file is not None:
+        return base64.b64encode(uploaded_file.read()).decode('utf-8')
+    return None
+
+# Use the base64 encoded photo if uploaded, otherwise use a placeholder
+photo_source = "https://via.placeholder.com/150" # Fallback placeholder
+if developer_photo is not None:
+    base64_image = get_base64_encoded_image(developer_photo)
+    photo_source = f"data:image/png;base64,{base64_image}"
+
+# Define the HTML and CSS for the updated footer with circular photo
+st.markdown(f"""
+    <div class="footer">
+        <div class="developer-profile">
+            <img src="{photo_source}" alt="Developer Photo" class="developer-img">
+            <div style="text-align: left;">
+                <strong>Developed by:</strong> Atish (Enrollment No.: 25AG62R01) <br>
+                M.Tech Scholar, Land and Water Resource Engineering
+            </div>
+        </div>
+        
+        <div style="line-height: 1.6;">
+            <strong>M.Tech. Supervisor:</strong> Prof. Rajendra Singh <br>
+            Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
+            <br>
+            <strong>Project Guidance:</strong> Mr. Laxman Boggarapu <br>
+            Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+            <br>
+            <strong>Institutions:</strong> <br>
+            Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
+            National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+            <br>
+            📧 <strong>Contact:</strong> atishyadav7304@gmail.com <br>
+            💬 <strong>Feedback:</strong> We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
         </div>
     </div>
-    
-    <div style="line-height: 1.6;">
-        <strong>M.Tech. Supervisor:</strong> Prof. Rajendra Singh <br>
-        Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
-        <br>
-        <strong>Project Guidance:</strong> Mr. Laxman Boggarapu <br>
-        Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-        <br>
-        <strong>Institutions:</strong> <br>
-        Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
-        National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-        <br>
-        📧 <strong>Contact:</strong> atishyadav7304@gmail.com <br>
-        💬 <strong>Feedback:</strong> We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
-    </div>
 """, unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
+# END OF FOOTER
