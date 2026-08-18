@@ -83,17 +83,20 @@ col1, col2, col3 = st.columns(3)
 with col1:
     st.info("**Step 1: Pre-Processing**")
     st.write("Upload raw ASD FieldSpec data, remove noise, and resample to 10nm intervals.")
-    st.page_link("pages/1_⚙️_PRE-PROCESSING.py", label="Go to Pre-Processing", icon="⚙️")
+    # Emojis removed from the file path here
+    st.page_link("pages/1_PRE-PROCESSING.py", label="Go to Pre-Processing", icon="⚙️")
 
 with col2:
     st.success("**Step 2: Model Training**")
     st.write("Train traditional ML and Deep Learning algorithms on your split datasets.")
-    st.page_link("pages/2_🧠_MODEL.py", label="Go to Models", icon="🧠")
+    # Emojis removed from the file path here
+    st.page_link("pages/2_MODEL.py", label="Go to Models", icon="🧠")
 
 with col3:
     st.warning("**Step 3: Comparison**")
     st.write("Analyze and compare evaluation metrics across all trained models.")
-    st.page_link("pages/3_📊_COMPARISON.py", label="Go to Comparison", icon="📊")
+    # Emojis removed from the file path here
+    st.page_link("pages/3_COMPARISON.py", label="Go to Comparison", icon="📊")
 
 st.markdown("---")
 
