@@ -47,15 +47,17 @@ def plot_spectra(data, title):
         plot_bgcolor='white',
         paper_bgcolor='white',
         
-        # X-Axis Styling
+        # X-Axis Styling (FIXED TITLE FONT)
         xaxis=dict(
-            title='<b>Wavelength (nm)</b>',
-            titlefont=dict(color='black', size=14),
+            title=dict(
+                text='<b>Wavelength (nm)</b>',
+                font=dict(color='black', size=14)
+            ),
             tickfont=dict(color='black', size=12),
             tickmode='linear',
             tick0=380,     # Starts ticks exactly at 380
             dtick=200,     # Intervals of 200 (380, 580, 780...)
-            range=[350, 2400], # Adds slight padding around the data
+            range=[350, 2500], # Adds slight padding around the data
             showgrid=True,
             gridcolor='lightgrey',
             showline=True,
@@ -64,15 +66,17 @@ def plot_spectra(data, title):
             mirror=True    # Creates the top border of the box
         ),
         
-        # Y-Axis Styling
+        # Y-Axis Styling (FIXED TITLE FONT)
         yaxis=dict(
-            title='<b>Reflectance</b>',
-            titlefont=dict(color='black', size=14),
+            title=dict(
+                text='<b>Reflectance</b>',
+                font=dict(color='black', size=14)
+            ),
             tickfont=dict(color='black', size=12),
             tickmode='linear',
             tick0=0,
             dtick=0.1,     # Intervals of 0.1 (0, 0.1, 0.2...)
-            range=[0, 0.8], # Locks the Y-axis from 0 to 0.8
+            range=[-1, 3.5], # Locks the Y-axis from 0 to 0.8
             showgrid=True,
             gridcolor='lightgrey',
             showline=True,
