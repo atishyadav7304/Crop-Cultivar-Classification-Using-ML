@@ -192,7 +192,8 @@ with col_details:
 with col_map:
     st.markdown("**📍 Location:** Dept. of AgFE, IIT Kharagpur")
     
-    # HTML iframe for embedding Google Maps (t=k sets it to Satellite view, z=18 sets zoom level)
+    # HTML iframe for embedding Google Maps 
+    # Using exact coordinates (22.3175, 87.3015) in the 'q' parameter forces the red pin to drop.
     map_html = """
     <iframe 
         width="100%" 
@@ -202,7 +203,7 @@ with col_map:
         scrolling="no" 
         marginheight="0" 
         marginwidth="0" 
-        src="https://maps.google.com/maps?q=Department%20of%20Agricultural%20and%20Food%20Engineering,%20IIT%20Kharagpur&t=k&z=18&ie=UTF8&iwloc=&output=embed">
+        src="https://maps.google.com/maps?q=22.3175,87.3015&t=k&z=18&ie=UTF8&output=embed">
     </iframe>
     """
     
