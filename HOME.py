@@ -192,11 +192,19 @@ with col_details:
 with col_map:
     st.markdown("**📍 Location:** Dept. of AgFE, IIT Kharagpur")
     
-    # Exact coordinates for the Department of Agricultural and Food Engineering, IIT Kharagpur
-    map_df = pd.DataFrame({
-        'LAT': [22.3175],
-        'LON': [87.3015]
-    })
+    # HTML iframe for embedding Google Maps (t=k sets it to Satellite view, z=18 sets zoom level)
+    map_html = """
+    <iframe 
+        width="100%" 
+        height="320" 
+        frameborder="0" 
+        style="border:0; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
+        scrolling="no" 
+        marginheight="0" 
+        marginwidth="0" 
+        src="https://maps.google.com/maps?q=Department%20of%20Agricultural%20and%20Food%20Engineering,%20IIT%20Kharagpur&t=k&z=18&ie=UTF8&iwloc=&output=embed">
+    </iframe>
+    """
     
-    # Render the interactive map
-    st.map(map_df, zoom=16, color="#2E7D32")
+    # Render the HTML map component in Streamlit
+    components.html(map_html, height=330)
