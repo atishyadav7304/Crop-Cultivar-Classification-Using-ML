@@ -182,9 +182,16 @@ with col_details:
         Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
         <br>
         **Institutions:** <br>
-        Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
-        National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-        <br>
+        <div style="margin-top: 5px; margin-bottom: 8px; display: flex; align-items: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/en/1/1c/IIT_Kharagpur_Logo.svg" 
+                 style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #a0a0a0; background-color: white; padding: 2px; margin-right: 10px; object-fit: contain;">
+            <span>Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur</span>
+        </div>
+        <div style="margin-bottom: 15px; display: flex; align-items: center;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Indian_Space_Research_Organisation_Logo.svg" 
+                 style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid #a0a0a0; background-color: white; padding: 2px; margin-right: 10px; object-fit: contain;">
+            <span>National Remote Sensing Centre (NRSC), ISRO, Hyderabad</span>
+        </div>
         📧 **Contact:** atishyadav7304@gmail.com <br>
         💬 **Feedback:** We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
     """, unsafe_allow_html=True)
