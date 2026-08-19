@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-import plotly.graph_objects as go
 from sklearn.model_selection import train_test_split
+import plotly.graph_objects as go
 
 # --- Helper Function for Plotting Spectral Data ---
 def plot_spectra(data, title):
@@ -38,7 +38,7 @@ def plot_spectra(data, title):
             tickmode='linear',
             tick0=380,
             dtick=200,
-            range=[350, 2400],
+            range=[350, 2500],
             showgrid=True,
             gridcolor='lightgrey',
             showline=True,
@@ -52,7 +52,7 @@ def plot_spectra(data, title):
             tickmode='linear',
             tick0=0,
             dtick=0.1,
-            range=[0, 0.8], # Adjust this if your reflectance values exceed 0.8
+            range=[-1, 3.5], 
             showgrid=True,
             gridcolor='lightgrey',
             showline=True,
@@ -64,7 +64,7 @@ def plot_spectra(data, title):
             title=None,
             x=0.98, y=0.98,
             xanchor='right', yanchor='top',
-            bgcolor='rgba(255, 255, 255, 0.9)',
+            bgcolor='rgba(255, 255, 255, 0.9)', 
             bordercolor='black', borderwidth=1,
             font=dict(color='black', size=11)
         ),
@@ -73,169 +73,157 @@ def plot_spectra(data, title):
     )
     st.plotly_chart(fig, use_container_width=True)
 
-# --- Page Header ---
-st.title("Step 1: Data Preprocessing")
-st.write("Select your processing stage below, then upload the corresponding dataset to begin.")
 
-# --- Dropdown Menu for Workflow Steps ---
-processing_step = st.selectbox(
-    "Select Processing Stage:",
-    options=[
-        "🟢 1.1 | Raw Data Input", 
-        "🟠 1.2 | Noise Removal Step", 
-        "🔵 1.3 | Resampling & Data Splitting Step"
-    ],
-    index=0
-)
+# --- Session State Initialization ---
+if 'raw_data' not in st.session_state:
+    st.session_state.raw_data = None
+if 'df_clean' not in st.session_state:
+    st.session_state.df_clean = None
+if 'df_resampled' not in st.session_state:
+    st.session_state.df_resampled = None
+
+st.title("Step 1: Data Preprocessing")
+st.write("Upload your hyperspectral data, then select the processing step from the dropdown below.")
+
+# --- Global File Uploader ---
+uploaded_file = st.file_uploader("Upload your dataset (.csv or .xlsx)", type=["csv", "xlsx"])
+
+if uploaded_file is not None:
+    try:
+        if uploaded_file.name.endswith('.csv'):
+            st.session_state.raw_data = pd.read_csv(uploaded_file)
+        elif uploaded_file.name.endswith('.xlsx'):
+            st.session_state.raw_data = pd.read_excel(uploaded_file)
+        
+        st.success(f"Successfully loaded: {uploaded_file.name}")
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
 
 st.markdown("---")
 
-# ==========================================
-# STAGE 1.1: RAW DATA INPUT
-# ==========================================
-if processing_step == "🟢 1.1 | Raw Data Input":
-    st.write("### 📤 Upload Raw Data")
-    raw_file = st.file_uploader("Upload your RAW dataset (.csv or .xlsx)", type=["csv", "xlsx"], key="raw")
+# Only display the workflow if a file has been uploaded
+if st.session_state.raw_data is not None:
     
-    if raw_file is not None:
-        try:
-            if raw_file.name.endswith('.csv'):
-                df = pd.read_csv(raw_file)
-            else:
-                df = pd.read_excel(raw_file)
-                
-            st.success(f"Successfully loaded: {raw_file.name}")
-            
-            st.write("### Raw Data Preview")
-            st.dataframe(df.head())
-            plot_spectra(df, "Raw Data Spectral Signatures (1 Sample per Cultivar)")
-            
-            st.markdown("---")
-            st.write("### Apply Next Step: Noise Removal")
-            st.write("Remove noisy bands (e.g., < 400 nm and water absorption regions).")
-            
-            if st.button("Apply Noise Removal"):
-                with st.spinner('Applying noise removal...'):
+    # --- Dropdown Menu ---
+    processing_step = st.selectbox(
+        "Select Processing Stage:",
+        options=[
+            "1. Raw Data Input", 
+            "2. Noise Removal Step", 
+            "3. Resampling & Data Splitting Step"
+        ],
+        index=0
+    )
+
+    # ==========================================
+    # STAGE 1: RAW DATA INPUT
+    # ==========================================
+    if processing_step == "1. Raw Data Input":
+        st.write("### Raw Data Preview")
+        st.dataframe(st.session_state.raw_data.head())
+        plot_spectra(st.session_state.raw_data, "Raw Data Spectral Signatures (1 Sample per Cultivar)")
+
+    # ==========================================
+    # STAGE 2: NOISE REMOVAL
+    # ==========================================
+    elif processing_step == "2. Noise Removal Step":
+        st.write("### Noise Removal")
+        st.write("Click below to remove noisy bands (e.g., < 400 nm and water absorption regions).")
+
+        if st.button("Apply Noise Removal"):
+            with st.spinner('Applying noise removal...'):
+                try:
+                    df = st.session_state.raw_data
                     if df.shape[1] < 2:
                         st.error("Data must have at least two columns (one identifier, one band).")
-                    else:
-                        samples = df.iloc[:, 0]
-                        X = df.iloc[:, 1:].copy()
-                        original_band_count = X.shape[1]
+                        st.stop()
 
-                        X.columns = X.columns.astype(float)
-                        keep1 = X.loc[:, (X.columns >= 400) & (X.columns <= 1349)]
-                        keep2 = X.loc[:, (X.columns >= 1451) & (X.columns <= 1799)]
-                        keep3 = X.loc[:, (X.columns >= 1951) & (X.columns <= 2300)]
+                    samples = df.iloc[:, 0]
+                    X = df.iloc[:, 1:].copy()
+                    original_band_count = X.shape[1]
 
-                        clean_features = pd.concat([keep1, keep2, keep3], axis=1)
-                        clean_features.columns = [str(int(x)) for x in clean_features.columns]
-                        
-                        df_clean = pd.concat([samples, clean_features], axis=1)
-                        
-                        st.success("Noise removal complete!")
-                        
-                        col1, col2, col3 = st.columns(3)
-                        col1.metric("Original Bands", original_band_count)
-                        col2.metric("Bands After Cleaning", clean_features.shape[1])
-                        col3.metric("Bands Removed", original_band_count - clean_features.shape[1])
-
-                        st.write("### Cleaned Data Preview")
-                        st.dataframe(df_clean.head())
-                        plot_spectra(df_clean, "Cleaned Data Spectral Signatures (Noisy Bands Removed)")
-                        
-                        # Provide a download button for the intermediate step
-                        st.download_button(
-                            label="📥 Download Noise-Removed Data",
-                            data=df_clean.to_csv(index=False).encode('utf-8'),
-                            file_name='noise_removed_data.csv',
-                            mime='text/csv'
-                        )
-
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
-
-# ==========================================
-# STAGE 1.2: NOISE REMOVAL STEP
-# ==========================================
-elif processing_step == "🟠 1.2 | Noise Removal Step":
-    st.write("### 📤 Upload Noise-Removed Data")
-    clean_file = st.file_uploader("Upload your NOISE-REMOVED dataset (.csv or .xlsx)", type=["csv", "xlsx"], key="clean")
-    
-    if clean_file is not None:
-        try:
-            if clean_file.name.endswith('.csv'):
-                df_clean = pd.read_csv(clean_file)
-            else:
-                df_clean = pd.read_excel(clean_file)
-                
-            st.success(f"Successfully loaded: {clean_file.name}")
-            
-            st.write("### Cleaned Data Preview")
-            st.dataframe(df_clean.head())
-            plot_spectra(df_clean, "Cleaned Data Spectral Signatures (Noisy Bands Removed)")
-            
-            st.markdown("---")
-            st.write("### Apply Next Step: Resampling to 10 nm")
-            st.write("Resample the cleaned wavelengths to a consistent 10 nm interval.")
-            
-            if st.button("Apply Resampling to 10nm"):
-                with st.spinner('Resampling data...'):
-                    samples = df_clean.iloc[:, 0]
-                    X = df_clean.iloc[:, 1:].copy()
                     X.columns = X.columns.astype(float)
 
-                    selected = []
-                    for wl in range(400, 2451, 10):
-                        if not X.empty and X.columns.min() <= wl <= X.columns.max() + 10:
-                            nearest = min(X.columns, key=lambda x: abs(x - wl))
-                            selected.append(nearest)
+                    keep1 = X.loc[:, (X.columns >= 400) & (X.columns <= 1349)]
+                    keep2 = X.loc[:, (X.columns >= 1451) & (X.columns <= 1799)]
+                    keep3 = X.loc[:, (X.columns >= 1951) & (X.columns <= 2300)]
 
-                    selected = sorted(list(set(selected)))
-                    X10 = X[selected]
-                    X10.columns = [str(int(i)) for i in selected]
+                    clean_features = pd.concat([keep1, keep2, keep3], axis=1)
+                    clean_features.columns = [str(int(x)) for x in clean_features.columns]
 
-                    df_resampled = pd.concat([samples, X10], axis=1)
+                    df_clean = pd.concat([samples, clean_features], axis=1)
+                    st.session_state.df_clean = df_clean
 
-                    st.success(f"Resampling complete! Reduced to {X10.shape[1]} bands.")
-                    
-                    st.write("### Resampled Data Preview")
-                    st.dataframe(df_resampled.head())
-                    plot_spectra(df_resampled, "Resampled Data (10 nm) Spectral Signatures")
-                    
-                    # Provide a download button for the resampled step
-                    st.download_button(
-                        label="📥 Download Resampled Data (10nm)",
-                        data=df_resampled.to_csv(index=False).encode('utf-8'),
-                        file_name='resampled_10nm_data.csv',
-                        mime='text/csv'
-                    )
+                    st.success("Noise removal complete!")
+                except Exception as e:
+                    st.error(f"An error occurred during noise removal: {e}")
 
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
+        # Display cleaned data if it exists in session state
+        if st.session_state.df_clean is not None:
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Original Bands", st.session_state.raw_data.shape[1] - 1)
+            col2.metric("Bands After Cleaning", st.session_state.df_clean.shape[1] - 1)
+            col3.metric("Bands Removed", (st.session_state.raw_data.shape[1] - 1) - (st.session_state.df_clean.shape[1] - 1))
 
-# ==========================================
-# STAGE 1.3: RESAMPLING & SPLITTING
-# ==========================================
-elif processing_step == "🔵 1.3 | Resampling & Data Splitting Step":
-    st.write("### 📤 Upload Resampled Data")
-    resampled_file = st.file_uploader("Upload your RESAMPLED dataset (.csv or .xlsx)", type=["csv", "xlsx"], key="resampled")
-    
-    if resampled_file is not None:
-        try:
-            if resampled_file.name.endswith('.csv'):
-                df_resampled = pd.read_csv(resampled_file)
+            st.write("### Cleaned Data Preview")
+            st.dataframe(st.session_state.df_clean.head())
+            plot_spectra(st.session_state.df_clean, "Cleaned Data Spectral Signatures (Noisy Bands Removed)")
+
+    # ==========================================
+    # STAGE 3: RESAMPLING & SPLITTING
+    # ==========================================
+    elif processing_step == "3. Resampling & Data Splitting Step":
+        st.write("### Resampling to 10 nm")
+        
+        # User option to bypass noise removal output
+        data_source = st.radio(
+            "Select input data for resampling:",
+            options=["Use Output from Noise Removal", "Bypass: Use Uploaded File Directly"],
+            help="If you uploaded a file that is already clean, select 'Bypass' to resample it directly."
+        )
+
+        target_df = None
+        if data_source == "Use Output from Noise Removal":
+            if st.session_state.df_clean is not None:
+                target_df = st.session_state.df_clean
             else:
-                df_resampled = pd.read_excel(resampled_file)
-                
-            st.success(f"Successfully loaded: {resampled_file.name}")
-            
+                st.warning("⚠️ No noise-removed data found. Please run the 'Noise Removal Step' first, or select the Bypass option above.")
+        else:
+            target_df = st.session_state.raw_data
+
+        if target_df is not None:
+            if st.button("Apply Resampling"):
+                with st.spinner('Resampling data...'):
+                    try:
+                        samples = target_df.iloc[:, 0]
+                        X = target_df.iloc[:, 1:].copy()
+                        X.columns = X.columns.astype(float)
+
+                        selected = []
+                        for wl in range(400, 2451, 10):
+                            if not X.empty and X.columns.min() <= wl <= X.columns.max() + 10:
+                                nearest = min(X.columns, key=lambda x: abs(x - wl))
+                                selected.append(nearest)
+
+                        selected = sorted(list(set(selected)))
+                        X10 = X[selected]
+                        X10.columns = [str(int(i)) for i in selected]
+
+                        df_resampled = pd.concat([samples, X10], axis=1)
+                        st.session_state.df_resampled = df_resampled
+
+                        st.success(f"Resampling complete! Reduced to {X10.shape[1]} bands.")
+                    except Exception as e:
+                        st.error(f"An error occurred during resampling: {e}")
+
+        # Display resampled data and splitting section if it exists
+        if st.session_state.df_resampled is not None:
             st.write("### Resampled Data Preview")
-            st.dataframe(df_resampled.head())
-            plot_spectra(df_resampled, "Resampled Data (10 nm) Spectral Signatures")
+            st.dataframe(st.session_state.df_resampled.head())
+            plot_spectra(st.session_state.df_resampled, "Resampled Data (10 nm) Spectral Signatures")
             
             st.markdown("---")
-            st.write("### Apply Next Step: Dataset Splitting")
+            st.write("### Dataset Splitting")
             
             split_ratio = st.selectbox(
                 "Select Train:Validation:Test split ratio:",
@@ -245,6 +233,7 @@ elif processing_step == "🔵 1.3 | Resampling & Data Splitting Step":
 
             if st.button("Split Dataset"):
                 with st.spinner('Splitting data...'):
+                    df_res = st.session_state.df_resampled
                     train_pct, val_pct, test_pct = [int(i) for i in split_ratio.split(":")]
                     
                     first_split_test_size = (val_pct + test_pct) / 100.0
@@ -252,10 +241,10 @@ elif processing_step == "🔵 1.3 | Resampling & Data Splitting Step":
 
                     try:
                         train_df, temp_df = train_test_split(
-                            df_resampled, 
+                            df_res, 
                             test_size=first_split_test_size, 
                             random_state=42, 
-                            stratify=df_resampled.iloc[:, 0]
+                            stratify=df_res.iloc[:, 0]
                         )
 
                         val_df, test_df = train_test_split(
@@ -273,15 +262,28 @@ elif processing_step == "🔵 1.3 | Resampling & Data Splitting Step":
                         col3.metric(f"Testing Set ({test_pct}%)", f"{test_df.shape[0]} rows")
 
                         st.write("Download your prepared datasets as CSV files below:")
-                        
+
                         col_dl1, col_dl2, col_dl3 = st.columns(3)
 
-                        col_dl1.download_button(label="📥 Download Train Data", data=train_df.to_csv(index=False).encode('utf-8'), file_name='train_data_10nm.csv', mime='text/csv')
-                        col_dl2.download_button(label="📥 Download Validation Data", data=val_df.to_csv(index=False).encode('utf-8'), file_name='val_data_10nm.csv', mime='text/csv')
-                        col_dl3.download_button(label="📥 Download Test Data", data=test_df.to_csv(index=False).encode('utf-8'), file_name='test_data_10nm.csv', mime='text/csv')
-                        
-                    except ValueError as e:
-                        st.error(f"Splitting failed. This usually happens if your classes are too small to properly stratify. Try a different ratio. \n\nDetailed Error: {e}")
+                        col_dl1.download_button(
+                            label="Download Train Data",
+                            data=train_df.to_csv(index=False).encode('utf-8'),
+                            file_name='train_data_10nm.csv',
+                            mime='text/csv'
+                        )
 
-        except Exception as e:
-            st.error(f"Error processing file: {e}")
+                        col_dl2.download_button(
+                            label="Download Validation Data",
+                            data=val_df.to_csv(index=False).encode('utf-8'),
+                            file_name='val_data_10nm.csv',
+                            mime='text/csv'
+                        )
+
+                        col_dl3.download_button(
+                            label="Download Test Data",
+                            data=test_df.to_csv(index=False).encode('utf-8'),
+                            file_name='test_data_10nm.csv',
+                            mime='text/csv'
+                        )
+                    except ValueError as e:
+                        st.error(f"Splitting failed. This usually happens if your classes are too small to properly stratify based on the selected ratio. Try a different ratio or ensure you have enough data per class. \n\nDetailed Error: {e}")
