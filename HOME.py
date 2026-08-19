@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Custom CSS for Styling ---
+# --- Custom CSS for Styling & Blinking Buttons ---
 st.markdown("""
     <style>
     .main-title {
@@ -43,6 +43,31 @@ st.markdown("""
         background-color: #f9f9f9;
         padding-bottom: 20px;
         border-radius: 10px;
+    }
+    
+    /* --- NEW: Glowing/Blinking Animation for Navigation Buttons --- */
+    @keyframes glowing-pulse {
+        0% { box-shadow: 0 0 5px rgba(46, 125, 50, 0.2); transform: scale(1); }
+        50% { box-shadow: 0 0 20px rgba(46, 125, 50, 0.9); transform: scale(1.03); }
+        100% { box-shadow: 0 0 5px rgba(46, 125, 50, 0.2); transform: scale(1); }
+    }
+
+    /* Target ONLY the page links in the main body area */
+    .main a[data-testid="stPageLink-NavLink"] {
+        animation: glowing-pulse 1.5s infinite !important;
+        background-color: #ffffff !important;
+        border: 2px solid #2E7D32 !important;
+        border-radius: 8px !important;
+        margin-top: 10px !important;
+        transition: all 0.2s ease !important;
+    }
+
+    /* Lock the button in a highlighted state when the user hovers over it */
+    .main a[data-testid="stPageLink-NavLink"]:hover {
+        animation: none !important;
+        transform: scale(1.05) !important;
+        background-color: #e8f5e9 !important;
+        box-shadow: 0 0 15px rgba(46, 125, 50, 1) !important;
     }
     </style>
 """, unsafe_allow_html=True)
