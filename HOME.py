@@ -193,7 +193,8 @@ with col_map:
     st.markdown("**📍 Location:** Dept. of AgFE, IIT Kharagpur")
     
     # HTML iframe for embedding Google Maps 
-    # Using the exact decimal equivalent of 22°19'03.0"N 87°18'05.4"E (22.3175, 87.3015)
+    # Using the exact decimal equivalent of 22°19'03.1"N 87°18'49.5"E (22.317528, 87.313750)
+    # This matches your screenshot perfectly.
     map_html = """
     <iframe 
         width="100%" 
@@ -203,7 +204,7 @@ with col_map:
         scrolling="no" 
         marginheight="0" 
         marginwidth="0" 
-        src="https://maps.google.com/maps?q=22.3175,87.3015&hl=en&t=k&z=18&output=embed">
+        src="https://maps.google.com/maps?q=22.317528,87.313750&hl=en&t=k&z=18&output=embed">
     </iframe>
     """
     
