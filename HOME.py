@@ -165,22 +165,38 @@ with st.expander("📚 View Project References"):
     """)
 
 # --- Developer & Contact Details (Footer) ---
-st.markdown('<div class="footer">', unsafe_allow_html=True)
-st.markdown("""
-    **Developed by:** Atish (Enrollment No.: 25AG62R01) <br>
-    M.Tech Scholar, Land and Water Resource Engineering <br>
-    <br>
-    **M.Tech. Supervisor:** Prof. Rajendra Singh <br>
-    Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
-    <br>
-    **Project Guidance:** Mr. Laxman Boggarapu <br>
-    Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-    <br>
-    **Institutions:** <br>
-    Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
-    National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-    <br>
-    📧 **Contact:** atishyadav7304@gmail.com <br>
-    💬 **Feedback:** We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
-""", unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<h3 class="section-header">👨‍💻 Authors Details and Contact</h3>', unsafe_allow_html=True)
+
+# Create two columns: a larger one for text, a smaller one for the map
+col_details, col_map = st.columns([1.5, 1], gap="large")
+
+with col_details:
+    st.markdown("""
+        **Developed by:** Atish (Enrollment No.: 25AG62R01) <br>
+        M.Tech Scholar, Land and Water Resource Engineering <br>
+        <br>
+        **M.Tech. Supervisor:** Prof. Rajendra Singh <br>
+        Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
+        <br>
+        **Project Guidance:** Mr. Laxman Boggarapu <br>
+        Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+        <br>
+        **Institutions:** <br>
+        Department of Agricultural and Food Engineering, Indian Institute of Technology Kharagpur <br>
+        National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
+        <br>
+        📧 **Contact:** atishyadav7304@gmail.com <br>
+        💬 **Feedback:** We value your input! <a href="mailto:atishyadav7304@gmail.com?subject=Dashboard%20Feedback%20and%20Comments">Click here to send feedback or comments</a>
+    """, unsafe_allow_html=True)
+
+with col_map:
+    st.markdown("**📍 Location:** Dept. of AgFE, IIT Kharagpur")
+    
+    # Exact coordinates for the Department of Agricultural and Food Engineering, IIT Kharagpur
+    map_df = pd.DataFrame({
+        'LAT': [22.3175],
+        'LON': [87.3015]
+    })
+    
+    # Render the interactive map
+    st.map(map_df, zoom=16, color="#2E7D32")
