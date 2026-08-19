@@ -172,15 +172,38 @@ col_details, col_map = st.columns([1.5, 1], gap="large")
 
 with col_details:
     st.markdown("""
-        **Developed by:** Atish (Enrollment No.: 25AG62R01) <br>
-        M.Tech Scholar, Land and Water Resource Engineering <br>
-        <br>
-        **M.Tech. Supervisor:** Prof. Rajendra Singh <br>
-        Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur<br>
-        <br>
-        **Project Guidance:** Mr. Laxman Boggarapu <br>
-        Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad <br>
-        <br>
+        <!-- Developer Profile -->
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <!-- PASTE YOUR IMAGE URL IN THE 'src' ATTRIBUTE BELOW -->
+            <img src="YOUR_IMAGE_URL_HERE.jpg" 
+                 alt="Atish"
+                 style="width: 70px; height: 70px; min-width: 70px; border-radius: 8px; object-fit: cover; margin-right: 15px; border: 1px solid #a0a0a0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div>
+                <b>Developed by:</b> Atish (Enrollment No.: 25AG62R01)<br>
+                M.Tech Scholar, Land and Water Resource Engineering
+            </div>
+        </div>
+        
+        <!-- Supervisor Profile -->
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <img src="https://www.iitkgp.ac.in/files/fac_pp/ag-rsingh.jpg" 
+                 alt="Prof. Rajendra Singh"
+                 style="width: 70px; height: 70px; min-width: 70px; border-radius: 8px; object-fit: cover; margin-right: 15px; border: 1px solid #a0a0a0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <div>
+                <b>M.Tech. Supervisor:</b> Prof. Rajendra Singh<br>
+                Professor (HAG), Dept. AgFE, Indian Institute of Technology, Kharagpur
+            </div>
+        </div>
+        
+        <!-- Guide Profile -->
+        <div style="display: flex; align-items: center; margin-bottom: 25px;">
+            <div style="width: 70px; height: 70px; min-width: 70px; border: 2px dashed #a0a0a0; border-radius: 8px; background-color: #f0f2f6; display: flex; justify-content: center; align-items: center; margin-right: 15px; color: #888; font-size: 12px;">📸 Photo</div>
+            <div>
+                <b>Project Guidance:</b> Mr. Laxman Boggarapu<br>
+                Sci./Eng. 'SE' CAD/ASAG/RSAA, National Remote Sensing Centre (NRSC), ISRO, Hyderabad
+            </div>
+        </div>
+        
         **Institutions:** <br>
         <div style="margin-top: 5px; margin-bottom: 8px; display: flex; align-items: center;">
             <img src="https://upload.wikimedia.org/wikipedia/en/1/1c/IIT_Kharagpur_Logo.svg" 
