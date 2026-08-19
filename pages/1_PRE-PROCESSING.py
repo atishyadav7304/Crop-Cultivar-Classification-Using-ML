@@ -144,6 +144,7 @@ if processing_step == "🟢 1.1 | Raw Data Input":
                         st.dataframe(df_clean.head())
                         plot_spectra(df_clean, "Cleaned Data Spectral Signatures (Noisy Bands Removed)")
                         
+                        # Provide a download button for the intermediate step
                         st.download_button(
                             label="📥 Download Noise-Removed Data",
                             data=df_clean.to_csv(index=False).encode('utf-8'),
@@ -202,6 +203,7 @@ elif processing_step == "🟠 1.2 | Noise Removal Step":
                     st.dataframe(df_resampled.head())
                     plot_spectra(df_resampled, "Resampled Data (10 nm) Spectral Signatures")
                     
+                    # Provide a download button for the resampled step
                     st.download_button(
                         label="📥 Download Resampled Data (10nm)",
                         data=df_resampled.to_csv(index=False).encode('utf-8'),
